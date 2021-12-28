@@ -55,9 +55,29 @@ async function processRandom(names) {
   return messages;
 }
 
-client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}`);
-});
+function getNameArgs(input) {
+  const matches = input.match(/(--names) .*/g);
+  if (!matches || matches.length != 1) {
+    return ['']
+  }
+
+  return trimStrings(input.replace('--names ', '').split(','));
+}
+
+function trimStrings(strings) {
+  for (let i = 0; i < strings.length; i++) {
+    strings[i] = strings[i].trim();
+  }
+  return strings;
+}
+
+function printMessages(msg, messages) {
+  let message = '';
+  for (let i = 0; i < messages.length; i++) {
+    message += messages[i] + '\r\n'
+  }
+  msg.reply(message);
+}
 
 client.on('messageCreate', async msg => {
   // dont respond to bots
@@ -66,15 +86,14 @@ client.on('messageCreate', async msg => {
   }
 
   if (msg.content.startsWith("!random")) {
-    const containsArgs = msg.content.split(' ').length > 1
-    const names = containsArgs ? msg.content.split(' ')[1].split(',') : ['']
-    const messages = await processRandom(names);
-    let message = '';
-    for (let i = 0; i < messages.length; i++) {
-      message += messages[i] + '\r\n'
-    }
-    msg.reply(message);
+    const message = msg.content.replace('!random ', '');
+    const messages = await processRandom(getNameArgs(message));
+    printMessages(msg, messages);
   }
+});
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}`);
 });
 
 // TODO: move to github secret

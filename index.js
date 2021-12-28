@@ -26,19 +26,15 @@ async function getRandomChamp(ignore) {
 
 function processRandom(names) {
   let results = [];
-  if (names.length) {
-    for (name in names) {
-      const champion = await getRandomChamp();
-      let message = ''
-      if (result.name) {
-        message += `${name}: `;
-      }
-      message += champion.name;
-      msg.reply(message);
-    }
-  } else {
+  for (name in names) {
     const champion = await getRandomChamp();
-    msg.reply(champion.name);
+    let message = ''
+    if (result.name) {
+      message += `${name}: `;
+    }
+    message += `${champion.name}\r\n`;
+    results.push(message)
+    return message
   }
 }
 
@@ -54,8 +50,9 @@ client.on('messageCreate', async msg => {
 
   if (msg.content.startsWith("!random")) {
     const containsArgs = msg.content.split(' ').length > 1
-    const names = containsArgs ? msg.content.split(' ')[1].split(',') : []
-    processRandom(names);
+    const names = containsArgs ? msg.content.split(' ')[1].split(',') : ['']
+    const results = processRandom(names);
+    msg.reply(message);
   }
 });
 

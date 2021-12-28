@@ -34,7 +34,7 @@ client.on('messageCreate', async msg => {
   }
 
   if (msg.content.startsWith("!random")) {
-    const champion = getRandomChamp();
+    const champion = await getRandomChamp();
     msg.reply(champion.name);
   }
 });

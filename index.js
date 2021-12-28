@@ -24,6 +24,24 @@ async function getRandomChamp(ignore) {
   return champions[randomKey];
 }
 
+function processRandom(names) {
+  let results = [];
+  if (names.length) {
+    for (name in names) {
+      const champion = await getRandomChamp();
+      let message = ''
+      if (result.name) {
+        message += `${name}: `;
+      }
+      message += champion.name;
+      msg.reply(message);
+    }
+  } else {
+    const champion = await getRandomChamp();
+    msg.reply(champion.name);
+  }
+}
+
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}`);
 });
@@ -35,8 +53,9 @@ client.on('messageCreate', async msg => {
   }
 
   if (msg.content.startsWith("!random")) {
-    const champion = await getRandomChamp();
-    msg.reply(champion.name);
+    const containsArgs = msg.content.split(' ').length > 1
+    const names = containsArgs ? msg.content.split(' ')[1].split(',') : []
+    processRandom(names);
   }
 });
 

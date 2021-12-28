@@ -9,7 +9,7 @@ function getRandomInt(max) {
 }
 
 function fetchChamps() {
-  axios.get(champsData).then((response) => {
+  return axios.get(champsData).then((response) => {
     champions = response;
   })
 }

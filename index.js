@@ -20,14 +20,24 @@ async function getRandomChamp(ignore) {
   }
 
   const randomIndex = getRandomInt(Object.keys(champions).length - 1);
-  const randomKey = Object.keys(champions)[randomIndex]
+  const randomKey = Object.keys(champions)[randomIndex];
   return champions[randomKey];
 }
 
 async function processRandom(names) {
   let results = [];
   for (let i = 0; i < names.length; i++) {
-    const champion = await getRandomChamp();
+    let champion = await getRandomChamp();
+    exists = false
+    while (!exists) {
+      var existing = results.find(r => r.champion.name === champion.name);
+      if (!existing) {
+        champion = await getRandomChamp();
+      } else {
+        exists = true;
+      }
+    }
+
     let message = ''
     if (names[i].trim()) {
       message += `${names[i]}: `;

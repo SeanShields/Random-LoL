@@ -14,7 +14,7 @@ function fetchChamps() {
   });
 }
 
-function getRandomChamp(ignore) {
+async function getRandomChamp(ignore) {
   if (!Object.keys(champions).length) {
     await fetchChamps();
   }
@@ -35,9 +35,8 @@ client.on('messageCreate', async msg => {
   }
 
   if (msg.content.startsWith("!random")) {
-    getRandomChamp().then((champ) => {
-      msg.reply(champ.name);
-    });
+    const champion = await getRandomChamp();
+    msg.reply(champion.name);
   }
 });
 

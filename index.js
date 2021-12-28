@@ -2,25 +2,25 @@ const axios = require('axios');
 const Discord = require('discord.js');
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
 const champsData = 'http://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion.json';
-const champions = [];
+let champions = [];
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
 function fetchChamps() {
-  return axios.get(champsData).then((response) => {
-    champions = response;
-  })
+  return axios.get(champsData);
 }
 
-async function getRandomChamp(ignore) {
-  if (!champions.length) {
-    await fetchChamps();
-  }
-
-  const randomIndex = getRandomInt(champions.length - 1);
-  return champions[randomIndex]
+function getRandomChamp(ignore) {
+  return fetchChamps().then((response) => {
+    let champs = response.data.data;
+    const randomIndex = getRandomInt(Object.keys(champs).length - 1);
+    console.log(randomIndex)
+    const randomChamp = Object.keys(champs)[randomIndex]
+    console.log(randomChamp)
+    return champs[randomChamp];
+  });
 }
 
 client.on('ready', () => {
@@ -34,8 +34,9 @@ client.on('messageCreate', async msg => {
   }
 
   if (msg.content.startsWith("!random")) {
-    const champion = await getRandomChamp();
-    msg.reply(champion.name);
+    getRandomChamp().then((champ) => {
+      msg.reply(champ.name);
+    });
   }
 });
 

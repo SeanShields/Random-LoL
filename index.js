@@ -24,7 +24,7 @@ async function getRandomChamp(ignore) {
   return champions[randomKey];
 }
 
-function processRandom(names) {
+async function processRandom(names) {
   let results = [];
   for (name in names) {
     const champion = await getRandomChamp();

@@ -29,7 +29,7 @@ async function processRandom(names) {
   for (name in names) {
     const champion = await getRandomChamp();
     let message = ''
-    if (result.name) {
+    if (name) {
       message += `${name}: `;
     }
     message += `${champion.name}\r\n`;
@@ -52,7 +52,9 @@ client.on('messageCreate', async msg => {
     const containsArgs = msg.content.split(' ').length > 1
     const names = containsArgs ? msg.content.split(' ')[1].split(',') : ['']
     const results = processRandom(names);
-    msg.reply(message);
+    for (result in results) {
+      msg.reply(message);
+    }
   }
 });
 

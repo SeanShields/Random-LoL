@@ -29,7 +29,7 @@ async function processRandom(names) {
   for (let i = 0; i < names.length; i++) {
     const champion = await getRandomChamp();
     let message = ''
-    if (names[i]) {
+    if (names[i].trim()) {
       message += `${names[i]}: `;
     }
     message += `${champion.name}`;

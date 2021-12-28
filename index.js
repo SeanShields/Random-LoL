@@ -26,13 +26,13 @@ async function getRandomChamp(ignore) {
 
 async function processRandom(names) {
   let results = [];
-  for (const name in names) {
+  for (let i = 0; i < names.length; i++) {
     const champion = await getRandomChamp();
     let message = ''
-    if (name) {
-      message += `${name}: `;
+    if (names[i]) {
+      message += `${names[i]}: `;
     }
-    message += `${champion.name}\r\n`;
+    message += `${champion.name}`;
     results.push(message);
   }
 
@@ -52,10 +52,12 @@ client.on('messageCreate', async msg => {
   if (msg.content.startsWith("!random")) {
     const containsArgs = msg.content.split(' ').length > 1
     const names = containsArgs ? msg.content.split(' ')[1].split(',') : ['']
-    const results = processRandom(names);
-    for (result in results) {
-      msg.reply(result);
+    const results = await processRandom(names);
+    let message = '';
+    for (let i = 0; i < results.length; i++) {
+      message += results[i] + '\r\n'
     }
+    msg.reply(message);
   }
 });
 

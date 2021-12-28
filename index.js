@@ -28,25 +28,31 @@ async function processRandom(names) {
   let results = [];
   for (let i = 0; i < names.length; i++) {
     let champion = await getRandomChamp();
-    exists = false
-    while (!exists) {
-      var existing = results.find(r => r.champion.name === champion.name);
-      if (!existing) {
-        champion = await getRandomChamp();
-      } else {
-        exists = true;
+    if (results.length > 0) {
+      exists = true
+      while (exists) {
+        var existing = results.find(r => r.champion.name === champion.name);
+        if (existing) {
+          champion = await getRandomChamp();
+        } else {
+          exists = false;
+        }
       }
     }
-
-    let message = ''
-    if (names[i].trim()) {
-      message += `${names[i]}: `;
-    }
-    message += `${champion.name}`;
-    results.push(message);
+    results.push({ name: names[i], champion: champion });
   }
 
-  return results;
+  let messages = [];
+  for (let i = 0; i < results.length; i++) {
+    let message = ''
+    if (results[i].name) {
+      message += `${results[i].name}: `;
+    }
+    message += `${results[i].champion.name}`;
+    messages.push(message);
+  }
+
+  return messages;
 }
 
 client.on('ready', () => {
@@ -62,10 +68,10 @@ client.on('messageCreate', async msg => {
   if (msg.content.startsWith("!random")) {
     const containsArgs = msg.content.split(' ').length > 1
     const names = containsArgs ? msg.content.split(' ')[1].split(',') : ['']
-    const results = await processRandom(names);
+    const messages = await processRandom(names);
     let message = '';
-    for (let i = 0; i < results.length; i++) {
-      message += results[i] + '\r\n'
+    for (let i = 0; i < messages.length; i++) {
+      message += messages[i] + '\r\n'
     }
     msg.reply(message);
   }

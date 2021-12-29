@@ -1,7 +1,9 @@
-const axios = require('axios');
-const Discord = require('discord.js');
+import axios from 'axios';
+import Discord from 'discord.js';
+import banned from './banned.js';
+
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
-const champsData = 'http://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion.json';
+const championData = 'http://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion.json';
 let champions = {};
 
 function getRandomInt(max) {
@@ -9,7 +11,7 @@ function getRandomInt(max) {
 }
 
 function fetchChamps() {
-  return axios.get(champsData).then((response) => {
+  return axios.get(championData).then((response) => {
     champions = response.data.data;
   });
 }
@@ -24,15 +26,16 @@ async function getRandomChamp(ignore) {
   return champions[randomKey];
 }
 
-async function processRandom(names) {
+async function processRandom(names, excludeBanned) {
   let results = [];
   for (let i = 0; i < names.length; i++) {
     let champion = await getRandomChamp();
     if (results.length > 0) {
-      exists = true
+      let exists = true
       while (exists) {
-        var existing = results.find(r => r.champion.name === champion.name);
-        if (existing) {
+        const isExisting = results.find(r => r.champion.name === champion.name);
+        const isBanned = excludeBanned && banned.indexOf(champion.name) !== -1;
+        if (isExisting || isBanned) {
           champion = await getRandomChamp();
         } else {
           exists = false;
@@ -64,6 +67,15 @@ function getNameArgs(input) {
   return trimStrings(input.replace('--names ', '').split(','));
 }
 
+function getBannedArg(input) {
+  const matches = input.match(/(--names) .*/g);
+  if (!matches || matches.length != 1) {
+    return ['']
+  }
+
+  return trimStrings(input.replace('--names ', '').split(','));
+}
+
 function trimStrings(strings) {
   for (let i = 0; i < strings.length; i++) {
     strings[i] = strings[i].trim();
@@ -86,9 +98,18 @@ client.on('messageCreate', async msg => {
   }
 
   if (msg.content.startsWith("!random")) {
-    const message = msg.content.replace('!random ', '');
-    const messages = await processRandom(getNameArgs(message));
+    let message = msg.content.replace('!random ', '');
+    const excludeBanned = msg.content.includes('--banned');
+    if (excludeBanned) {
+      message = message.replace('--banned', '');
+    }
+    const messages = await processRandom(getNameArgs(message), excludeBanned);
+    if (excludeBanned) {
+      messages.push('', '(Banned Champions Excluded)')
+    }
     printMessages(msg, messages);
+  } else if (msg.content.startsWith("!banned")) {
+    printMessages(msg, banned);
   }
 });
 

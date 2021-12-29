@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  random-lol:
+    image: random-lol
+    hostname: random-lol
+    container_name: random-lol
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    entrypoint: [ "node", "index.js" ]

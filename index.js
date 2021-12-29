@@ -103,13 +103,15 @@ client.on('messageCreate', async msg => {
     if (excludeBanned) {
       message = message.replace('--banned', '');
     }
+
     const messages = await processRandom(getNameArgs(message), excludeBanned);
     if (excludeBanned) {
       messages.push('', '(Banned Champions Excluded)')
     }
+    
     printMessages(msg, messages);
   } else if (msg.content.startsWith("!banned")) {
-    printMessages(msg, banned);
+    printMessages(msg, banned.sort());
   }
 });
 

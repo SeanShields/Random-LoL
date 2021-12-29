@@ -1,5 +1,6 @@
 export default [
   'akshan',
   'janna',
-  'nami'
+  'nami',
+  'soraka'
 ];

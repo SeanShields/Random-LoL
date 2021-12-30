@@ -4,15 +4,17 @@ Discord bot that randomizes League of Legends champion selection.
 
 [Add to Discord](https://discord.com/api/oauth2/authorize?client_id=925425399108894791&permissions=2048&scope=bot)
 
-Available Commands:
-- `!random` picks a random champion
-- `!banned` prints the banned list
+### Available Commands:
+`!random` picks a random champion
 
-Options:
-- `--names` comma-delimited list of names to choose random champions for (handles duplicates)
-- `--banned` excludes champions within the banned list from being selected
+`!banned` prints the banned list
 
-Examples:
+### Options:
+`--names` comma-delimited list of names to choose random champions for (handles duplicates)
+
+`--banned` excludes champions within the banned list from being selected
+
+### Examples:
 
 `!random` picks a random champion
 

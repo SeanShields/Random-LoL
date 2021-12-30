@@ -1,6 +1,8 @@
 import axios from 'axios';
 import Discord from 'discord.js';
 import banned from './banned.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
 const dataVersionsUrl = 'https://ddragon.leagueoflegends.com/api/versions.json';
@@ -134,5 +136,4 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}`);
 });
 
-// TODO: move to github secret
-client.login('OTI1NDI1Mzk5MTA4ODk0Nzkx.Ycs7kA.fOPMSgNOAnMlrmaVbNBXqDMhmro');
+client.login(process.env.BOT_KEY);

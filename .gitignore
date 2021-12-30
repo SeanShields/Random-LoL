@@ -76,3 +76,4 @@ typings/
 .fusebox/
 
 docker-compose.yml
+.env

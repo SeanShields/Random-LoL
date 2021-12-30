@@ -10,7 +10,7 @@ Discord bot that randomizes League of Legends champion selection.
 `!banned` prints the banned list
 
 ### Options:
-`--names` comma-delimited list of names to choose random champions for (handles duplicates)
+`--names` comma-delimited list of names to choose random champions for (prevents duplicates)
 
 `--banned` excludes champions within the banned list from being selected
 

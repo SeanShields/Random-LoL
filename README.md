@@ -2,7 +2,7 @@
 
 Discord bot that randomizes League of Legends champion selection.
 
-Bot username: `Random LoL #5583`
+[Add to Discord](https://discord.com/api/oauth2/authorize?client_id=925425399108894791&permissions=2048&scope=bot)
 
 Available Commands:
 - `!random` picks a random champion

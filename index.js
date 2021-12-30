@@ -3,27 +3,42 @@ import Discord from 'discord.js';
 import banned from './banned.js';
 
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
-const championData = 'http://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion.json';
-let champions = {};
+const dataVersionsUrl = 'https://ddragon.leagueoflegends.com/api/versions.json';
+let CHAMPIONS = {};
+let VERSIONS = [];
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-function fetchChamps() {
-  return axios.get(championData).then((response) => {
-    champions = response.data.data;
+async function getChampionDataUrl() {
+  if (!VERSIONS.length) {
+    await fetchVersions();
+  }
+  return `http://ddragon.leagueoflegends.com/cdn/${VERSIONS[0]}/data/en_US/champion.json`
+}
+
+async function fetchChamps() {
+  const url = await getChampionDataUrl();
+  return axios.get(url).then((response) => {
+    CHAMPIONS = response.data.data;
+  });
+}
+
+function fetchVersions() {
+  return axios.get(dataVersionsUrl).then((response) => {
+    VERSIONS = response.data;
   });
 }
 
 async function getRandomChamp(ignore) {
-  if (!Object.keys(champions).length) {
+  if (!Object.keys(CHAMPIONS).length) {
     await fetchChamps();
   }
 
-  const randomIndex = getRandomInt(Object.keys(champions).length - 1);
-  const randomKey = Object.keys(champions)[randomIndex];
-  return champions[randomKey];
+  const randomIndex = getRandomInt(Object.keys(CHAMPIONS).length - 1);
+  const randomKey = Object.keys(CHAMPIONS)[randomIndex];
+  return CHAMPIONS[randomKey];
 }
 
 async function processRandom(names, excludeBanned) {
@@ -106,7 +121,7 @@ client.on('messageCreate', async msg => {
 
     const messages = await processRandom(getNameArgs(message), excludeBanned);
     if (excludeBanned) {
-      messages.push('', '(Banned Champions Excluded)')
+      messages.push('', '(banned champions excluded)')
     }
     
     printMessages(msg, messages);

@@ -2,6 +2,8 @@
 
 Discord bot that randomizes League of Legends champion selection.
 
+Bot username: `Random LoL #5583`
+
 Available Commands:
 - `!random` picks a random champion
 - `!banned` prints the banned list

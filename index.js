@@ -34,7 +34,7 @@ async function processRandom(names, excludeBanned) {
       let exists = true
       while (exists) {
         const isExisting = results.find(r => r.champion.name === champion.name);
-        const isBanned = excludeBanned && banned.indexOf(champion.name) !== -1;
+        const isBanned = excludeBanned && stringExists(banned, champion.name);
         if (isExisting || isBanned) {
           champion = await getRandomChamp();
         } else {
@@ -67,20 +67,20 @@ function getNameArgs(input) {
   return trimStrings(input.replace('--names ', '').split(','));
 }
 
-function getBannedArg(input) {
-  const matches = input.match(/(--names) .*/g);
-  if (!matches || matches.length != 1) {
-    return ['']
-  }
-
-  return trimStrings(input.replace('--names ', '').split(','));
-}
-
 function trimStrings(strings) {
   for (let i = 0; i < strings.length; i++) {
     strings[i] = strings[i].trim();
   }
   return strings;
+}
+
+function stringExists(arr, str) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].toUpperCase() === str.toUpperCase()) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function printMessages(msg, messages) {

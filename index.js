@@ -4,13 +4,13 @@ import banned from './banned.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
+const client = new Discord.Client({ intents: ['GUILDS', 'GUILD_MESSAGES'] });
 const dataVersionsUrl = 'https://ddragon.leagueoflegends.com/api/versions.json';
 let CHAMPIONS = {};
 let VERSIONS = [];
 
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 async function getChampionDataUrl() {
@@ -38,7 +38,7 @@ async function getRandomChamp(ignore) {
     await fetchChamps();
   }
 
-  const randomIndex = getRandomInt(Object.keys(CHAMPIONS).length - 1);
+  const randomIndex = getRandomInt(0, Object.keys(CHAMPIONS).length);
   const randomKey = Object.keys(CHAMPIONS)[randomIndex];
   return CHAMPIONS[randomKey];
 }
@@ -114,7 +114,7 @@ client.on('messageCreate', async msg => {
     return;
   }
 
-  if (msg.content.startsWith("!random")) {
+  if (msg.content.startsWith('!random')) {
     let message = msg.content.replace('!random ', '');
     const excludeBanned = msg.content.includes('--banned');
     if (excludeBanned) {
@@ -127,7 +127,7 @@ client.on('messageCreate', async msg => {
     }
     
     printMessages(msg, messages);
-  } else if (msg.content.startsWith("!banned")) {
+  } else if (msg.content.startsWith('!banned')) {
     printMessages(msg, banned.sort());
   }
 });

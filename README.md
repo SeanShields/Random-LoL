@@ -1,6 +1,6 @@
 # Random LoL
 
-Discord bot that randomizes League of Legends champion selection.
+Discord bot hostable via Node that randomizes League of Legends champion selection.
 
 This bot will pull the latest champions list from `ddragon.leagueoflegends.com` upon startup.
 

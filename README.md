@@ -4,6 +4,11 @@ Discord bot that randomizes League of Legends champion selection.
 
 [Add to Discord](https://discord.com/api/oauth2/authorize?client_id=925425399108894791&permissions=2048&scope=bot)
 
+## Host with Docker
+```
+docker-compose up --build
+```
+
 ### Available Commands:
 `!random` picks a random champion
 
